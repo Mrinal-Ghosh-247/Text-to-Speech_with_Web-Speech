@@ -11,11 +11,19 @@ const TTSComponent = () => {
   const utteranceRef = useRef(null);
 
   React.useEffect(() => {
+    if (!('speechSynthesis' in window)) {
+      console.warn('Speech Synthesis API is not supported in this browser.');
+      return;
+    }
     const loadVoices = () => {
-      const allVoices = window.speechSynthesis.getVoices();
+      try {
+        const allVoices = window.speechSynthesis.getVoices();
       setVoices(allVoices);
       if (!selectedVoice && allVoices.length > 0) {
         setSelectedVoice(allVoices[0].name);
+      }
+      } catch (e) {
+        console.error(e)
       }
     };
 
